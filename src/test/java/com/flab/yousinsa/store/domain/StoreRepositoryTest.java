@@ -21,7 +21,12 @@ class StoreRepositoryTest {
 
 	@BeforeEach
 	public void setUp() {
-		user = new UserEntity("test","test@test.com","test", UserRole.BUYER);
+		user = UserEntity.builder()
+			.userName("test")
+			.userEmail("test@test.com")
+			.userPassword("test")
+			.userRole(UserRole.BUYER)
+			.build();
 	}
 
 	@Test

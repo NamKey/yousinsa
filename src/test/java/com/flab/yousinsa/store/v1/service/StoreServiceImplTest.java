@@ -43,7 +43,12 @@ class StoreServiceImplTest {
 
 	@BeforeEach
 	public void setup() {
-		user = new UserEntity("test","test@test.com","test", UserRole.BUYER);
+		user = UserEntity.builder()
+			.userName("test")
+			.userEmail("test@test.com")
+			.userPassword("test")
+			.userRole(UserRole.BUYER)
+			.build();
 		store = Store.builder().id(1L).storeName("store").storeOwner(user).storeStatus(StoreStatus.REQUESTED).build();
 	}
 
