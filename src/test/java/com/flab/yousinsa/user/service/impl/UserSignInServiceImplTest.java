@@ -45,7 +45,13 @@ class UserSignInServiceImplTest {
 
 	@BeforeEach
 	public void setUp() {
-		user = new UserEntity("key", "rlfbd5142@gmail.com", hashedPassword, UserRole.BUYER);
+		user = UserEntity.builder()
+			.userName("key")
+			.userEmail("rlfbd5142@gmail.com")
+			.userPassword(hashedPassword)
+			.userRole(UserRole.BUYER)
+			.build();
+		
 		signInResponseDto = new SignInResponseDto(1L, user.getUserName(), user.getUserEmail(), user.getUserRole());
 	}
 
