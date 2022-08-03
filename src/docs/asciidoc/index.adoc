@@ -107,3 +107,13 @@ operation::create-store[snippets='curl-request,http-request,http-response,reques
 === Create Product
 
 operation::product-create[snippets='curl-request,http-request,http-response,request-body,request-fields,response-headers']
+
+=== Get Products
+
+operation::product-create[snippets='curl-request,http-request,http-response,request-body,request-fields,response-headers']
+
+== Store-API
+
+=== Create Store
+
+operation::create-store[snippets='curl-request,http-request,http-response,request-body,request-fields,response-headers']
