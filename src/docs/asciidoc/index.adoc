@@ -96,3 +96,14 @@ operation::user-signin[snippets='curl-request,http-request,http-response,request
 
 operation::user-signout[snippets='curl-request,http-request,http-response']
 
+== Store-API
+
+=== Create Store
+
+operation::create-store[snippets='curl-request,http-request,http-response,request-body,request-fields,response-headers']
+
+== Product-API
+
+=== Create Product
+
+operation::product-create[snippets='curl-request,http-request,http-response,request-body,request-fields,response-headers']
