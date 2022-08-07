@@ -10,6 +10,7 @@ import static org.springframework.restdocs.snippet.Attributes.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,13 +25,15 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.yousinsa.annotation.UnitTest;
-import com.flab.yousinsa.user.config.AuthWebConfig;
+import com.flab.yousinsa.user.controller.aop.AuthenticateAspect;
+import com.flab.yousinsa.user.controller.config.SpringTestAopConfig;
 import com.flab.yousinsa.user.domain.dtos.AuthUser;
 import com.flab.yousinsa.user.domain.dtos.request.SignInRequestDto;
 import com.flab.yousinsa.user.domain.dtos.request.SignUpRequestDto;
@@ -40,9 +43,11 @@ import com.flab.yousinsa.user.domain.entities.UserEntity;
 import com.flab.yousinsa.user.domain.enums.UserRole;
 import com.flab.yousinsa.user.service.contract.UserSignInService;
 import com.flab.yousinsa.user.service.contract.UserSignUpService;
+import com.flab.yousinsa.user.service.exception.AuthenticationException;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @WebMvcTest(UserController.class)
+@ContextConfiguration(classes = SpringTestAopConfig.class)
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
 class UserControllerTest {
@@ -152,7 +157,7 @@ class UserControllerTest {
 				)
 			);
 
-		AuthUser authUser = (AuthUser)mockHttpSession.getAttribute(AuthWebConfig.Session.AUTH_USER);
+		AuthUser authUser = (AuthUser)mockHttpSession.getAttribute(AuthenticateAspect.AUTH_USER);
 		assertThat(authUser.getUserEmail()).isEqualTo(signInResponseDto.getUserEmail());
 		assertThat(authUser.getUserName()).isEqualTo(signInResponseDto.getUserName());
 		assertThat(authUser.getUserRole()).isEqualTo(signInResponseDto.getUserRole());
@@ -168,7 +173,7 @@ class UserControllerTest {
 		MockHttpSession mockHttpSession = new MockHttpSession();
 		SignInResponseDto signInResponseDto = new SignInResponseDto(1L, user.getUserName(), user.getUserEmail(),
 			user.getUserRole());
-		mockHttpSession.setAttribute(AuthWebConfig.Session.AUTH_USER, signInResponseDto);
+		mockHttpSession.setAttribute(AuthenticateAspect.AUTH_USER, signInResponseDto);
 
 		// when
 		ResultActions resultActions = mockMvc.perform(delete("/api/v1/users/sign-out").session(mockHttpSession));
@@ -181,26 +186,26 @@ class UserControllerTest {
 					getDocumentResponse())
 			);
 
-		assertThatThrownBy(() -> mockHttpSession.getAttribute(AuthWebConfig.Session.AUTH_USER))
+		assertThatThrownBy(() -> mockHttpSession.getAttribute(AuthenticateAspect.AUTH_USER))
 			.isInstanceOf(IllegalStateException.class);
 	}
 
 	@UnitTest
 	@Test
 	@DisplayName("회원탈퇴 API Doc")
-	public void withDraw() throws Exception {
+public void withDraw() throws Exception {
 		// given
 		MockHttpSession mockHttpSession = new MockHttpSession();
 		Long deleteTargetUserId = 1L;
 		AuthUser authUser = new AuthUser(deleteTargetUserId, user.getUserName(), user.getUserEmail(),
 			user.getUserRole());
-		mockHttpSession.setAttribute(AuthWebConfig.Session.AUTH_USER, authUser);
+		mockHttpSession.setAttribute(AuthenticateAspect.AUTH_USER, authUser);
 		willDoNothing().given(userSignUpService).tryWithdrawUser(any(AuthUser.class), anyLong());
 
 		// when
 		ResultActions resultActions = mockMvc.perform(
-			RestDocumentationRequestBuilders.delete("/api/v1/users/{userId}", deleteTargetUserId).session(
-				mockHttpSession));
+			RestDocumentationRequestBuilders.delete("/api/v1/users/{userId}", deleteTargetUserId)
+				.session(mockHttpSession));
 
 		// then
 		resultActions.andExpect(status().isNoContent())
@@ -218,6 +223,11 @@ class UserControllerTest {
 		then(userSignUpService).should().tryWithdrawUser(refEq(authUser), refEq(deleteTargetUserId));
 	}
 
+	/**
+	 * 해당 되는 URL 패턴의 API가 있을 경우 Method가 다르면 401이 아니라 Method_Not_Allowed(405)가 반환됨
+	 * 따라서 이 테스트가 변동 사항이 없도록 만들 예정이 없는 URL로 테스트를 진행
+	 * @throws Exception
+	 */
 	@UnitTest
 	@Test
 	@DisplayName("이미 로그아웃시 로그아웃 실패")
@@ -229,25 +239,10 @@ class UserControllerTest {
 		ResultActions resultActions = mockMvc.perform(delete("/api/v1/users/sign-out"));
 
 		// then
-		resultActions.andExpect(status().isUnauthorized());
-	}
-
-	/**
-	 * 해당 되는 URL 패턴의 API가 있을 경우 Method가 다르면 401이 아니라 Method_Not_Allowed(405)가 반환됨
-	 * 따라서 이 테스트가 변동 사항이 없도록 만들 예정이 없는 URL로 테스트를 진행
-	 * @throws Exception
-	 */
-	@UnitTest
-	@Test
-	@DisplayName("회원가입, 로그인이 아닌 API에 대해서 Session이 없는 경우 인증되지 않음(401) 반환")
-	public void authRejectByAuthUserInterceptor() throws Exception {
-		// given
-		// NoSession
-
-		// when
-		ResultActions resultActions = mockMvc.perform(get("/api/test"));
-
-		// then
-		resultActions.andExpect(status().isUnauthorized());
+		resultActions.andExpect(status().isUnauthorized())
+			.andExpect(result -> Assertions.assertThat(result.getResolvedException())
+				.isInstanceOf(AuthenticationException.class)
+				.hasMessageContaining("Valid session does not exists")
+			);
 	}
 }
