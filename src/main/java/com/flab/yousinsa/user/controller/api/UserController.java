@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.flab.yousinsa.user.controller.annotation.AuthSession;
 import com.flab.yousinsa.user.controller.annotation.SignInUser;
 import com.flab.yousinsa.user.domain.dtos.AuthUser;
@@ -78,6 +79,7 @@ public class UserController {
 	@AuthSession
 	@DeleteMapping("api/v1/users/{userId}")
 	public ResponseEntity<Void> withDrawUser(@SignInUser AuthUser user, @PathVariable("userId") Long userId,
+
 		HttpSession httpSession) {
 		userSignUpService.tryWithdrawUser(user, userId);
 

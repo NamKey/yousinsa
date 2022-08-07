@@ -193,7 +193,7 @@ class UserControllerTest {
 	@UnitTest
 	@Test
 	@DisplayName("회원탈퇴 API Doc")
-	public void withDraw() throws Exception {
+public void withDraw() throws Exception {
 		// given
 		MockHttpSession mockHttpSession = new MockHttpSession();
 		Long deleteTargetUserId = 1L;
@@ -223,6 +223,11 @@ class UserControllerTest {
 		then(userSignUpService).should().tryWithdrawUser(refEq(authUser), refEq(deleteTargetUserId));
 	}
 
+	/**
+	 * 해당 되는 URL 패턴의 API가 있을 경우 Method가 다르면 401이 아니라 Method_Not_Allowed(405)가 반환됨
+	 * 따라서 이 테스트가 변동 사항이 없도록 만들 예정이 없는 URL로 테스트를 진행
+	 * @throws Exception
+	 */
 	@UnitTest
 	@Test
 	@DisplayName("이미 로그아웃시 로그아웃 실패")
