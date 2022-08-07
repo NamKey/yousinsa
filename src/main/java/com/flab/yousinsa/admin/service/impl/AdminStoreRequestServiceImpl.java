@@ -1,7 +1,6 @@
 package com.flab.yousinsa.admin.service.impl;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.flab.yousinsa.admin.domain.dtos.RequestStoreDtoResponse;
@@ -28,9 +27,8 @@ public class AdminStoreRequestServiceImpl implements AdminStoreRequestService {
 		this.storeRequestDtoConverter = storeRequestDtoConverter;
 	}
 
-	@Transactional
 	@Override
-	public RequestStoreDtoResponse acceptStoreRequest(Long storeId) {
+	public RequestStoreDtoResponse acceptStoreRequest(Long storeId, StoreStatus requestedStoreStatus) {
 		Assert.notNull(storeId, "storeId must be not null");
 
 		Store requestedStore = storeRepository.findById(storeId).orElseThrow(() -> {
@@ -42,7 +40,7 @@ public class AdminStoreRequestServiceImpl implements AdminStoreRequestService {
 			throw new InvalidStoreStateException("store status is not valid, only for requested");
 		}
 
-		requestedStore.setStoreStatus(StoreStatus.ACCEPTED);
+		requestedStore.setStoreStatus(requestedStoreStatus);
 
 		return storeRequestDtoConverter.convertEntityToResponse(requestedStore);
 	}
