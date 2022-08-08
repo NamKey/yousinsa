@@ -29,10 +29,13 @@ import com.flab.yousinsa.annotation.UnitTest;
 import com.flab.yousinsa.global.exceptions.NotFoundException;
 import com.flab.yousinsa.product.domain.dtos.ProductCreateOptionDto;
 import com.flab.yousinsa.product.domain.dtos.ProductCreateRequestDto;
+import com.flab.yousinsa.product.domain.dtos.ProductDto;
+import com.flab.yousinsa.product.domain.dtos.ProductOptionDto;
 import com.flab.yousinsa.product.domain.entity.ProductEntity;
 import com.flab.yousinsa.product.domain.entity.ProductOptionEntity;
 import com.flab.yousinsa.product.domain.enums.ProductCategory;
 import com.flab.yousinsa.product.service.contract.ProductCreateService;
+import com.flab.yousinsa.product.service.contract.ProductGetService;
 import com.flab.yousinsa.store.domain.Store;
 import com.flab.yousinsa.store.enums.StoreStatus;
 import com.flab.yousinsa.store.exceptions.IllegalStoreAccessException;
@@ -45,7 +48,6 @@ import com.flab.yousinsa.user.domain.enums.UserRole;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ProductController.class)
 @ContextConfiguration(classes = SpringTestAopConfig.class)
-@AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
 class ProductControllerTest {
 
@@ -68,8 +70,81 @@ class ProductControllerTest {
 	ProductOptionEntity largeOption;
 	ProductCreateRequestDto productCreateRequestDto;
 
+	UserEntity owner;
+	AuthUser ownerAuth;
+	AuthUser notOwnerAuth;
+	Store store;
+
+	ProductEntity product;
+	ProductOptionEntity smallOption;
+	ProductOptionEntity mediumOption;
+	ProductOptionEntity largeOption;
+	ProductCreateRequestDto productCreateRequestDto;
+
+	ProductEntity productTopBlueShirts;
+	ProductEntity productTopShirts;
+	ProductEntity productTopPinkShirts;
+
+	ProductDto productTopBlueShirtsDto;
+	ProductDto productTopShirtsDto;
+	ProductDto productTopPinkShirtsDto;
+
 	@BeforeEach
-	public void setUp() {
+	public void setUpGetProduct() {
+		productTopBlueShirts = makeProductEntity(1L, "productTopBlueShirts", ProductCategory.TOP, 1000L);
+		productTopShirts = makeProductEntity(2L, "productTopShirts", ProductCategory.TOP, 1500L);
+		productTopPinkShirts = makeProductEntity(3L, "productTopPinkShirts", ProductCategory.TOP, 2000L);
+
+		ProductCreateOptionDto smallOptionDto = new ProductCreateOptionDto(5, "small");
+		ProductCreateOptionDto mediumOptionDto = new ProductCreateOptionDto(10, "medium");
+		ProductCreateOptionDto largeOptionDto = new ProductCreateOptionDto(15, "large");
+
+		List<ProductCreateOptionDto> productOptionDtos = new ArrayList<>();
+		productOptionDtos.add(smallOptionDto);
+		productOptionDtos.add(mediumOptionDto);
+		productOptionDtos.add(largeOptionDto);
+
+		productCreateRequestDto = ProductCreateRequestDto.builder()
+			.requestStoreId(store.getId())
+			.productCategory(ProductCategory.TOP)
+			.productPrice(1000L)
+			.productCreateOptions(productOptionDtos)
+			.build();
+
+		smallOption = ProductOptionEntity.builder()
+			.id(1L)
+			.productCount(5)
+			.productSize("small")
+			.product(product)
+			.build();
+		mediumOption = ProductOptionEntity.builder()
+			.id(2L)
+			.productCount(10)
+			.productSize("medium")
+			.product(product)
+			.build();
+		largeOption = ProductOptionEntity.builder()
+			.id(3L)
+			.productCount(15)
+			.productSize("large")
+			.product(product)
+			.build();
+		List<ProductOptionEntity> productOptions = new ArrayList<>();
+		productOptions.add(smallOption);
+		productOptions.add(mediumOption);
+		productOptions.add(largeOption);
+
+		product = ProductEntity.builder()
+			.id(1L)
+			.productPrice(1000L)
+			.category(ProductCategory.TOP)
+			.store(store)
+			.options(productOptions)
+			.build();
+	}
+
+	@BeforeEach
+	public void setUpCreateProduct() {
 		owner = UserEntity.builder()
 			.id(1L)
 			.store(store)
@@ -173,6 +248,74 @@ class ProductControllerTest {
 
 		// when
 		ResultActions resultActions = mockMvc.perform(
+			get("/api/v1/products")
+				.queryParam("category", "TOP")
+		);
+
+		// then
+		resultActions.andExpect(status().isNotFound())
+			.andExpect(result -> Assertions.assertThat(result.getResolvedException())
+				.isInstanceOf(NotFoundException.class)
+				.hasMessageContaining("requested store id does not exist")
+			);
+	}
+
+	@UnitTest
+	@Test
+	@DisplayName("없는 카테고리 품목을 요청할 경우 실패")
+	public void getProductsWithNotExistCategory() throws Exception {
+		// given
+
+		// when
+		ResultActions resultActions = mockMvc.perform(
+			get("/api/v1/products")
+				.queryParam("category", "SHOES")
+		);
+
+		// then
+		resultActions.andExpect(status().isBadRequest());
+	}
+
+	@UnitTest
+	@Test
+	@DisplayName("존재하지 않는 Store Store에 물품 등록하는 경우 실패")
+	public void createProductWithNotExistOfStore() throws Exception {
+		// given
+		MockHttpSession mockHttpSession = new MockHttpSession();
+		mockHttpSession.setAttribute(AuthenticateAspect.AUTH_USER, ownerAuth);
+		given(
+			productCreateService.createProduct(any(ProductCreateRequestDto.class), any(AuthUser.class)))
+			.willThrow(new NotFoundException("requested store id does not exist"));
+
+		// when
+		ResultActions resultActions = mockMvc.perform(
+			post("/api/v1/products")
+				.session(mockHttpSession)
+				.content(objectMapper.writeValueAsString(productCreateRequestDto))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+		);
+
+		resultActions.andExpect(status().isNotFound())
+			.andExpect(result -> Assertions.assertThat(result.getResolvedException())
+				.isInstanceOf(NotFoundException.class)
+				.hasMessageContaining("requested store id does not exist")
+			);
+	}
+
+	@UnitTest
+	@Test
+	@DisplayName("아직 입점 처리 되지 않은 Store에 물품 등록하는 경우 실패")
+	public void createProductWithNotAcceptedStore() throws Exception {
+		// given
+		MockHttpSession mockHttpSession = new MockHttpSession();
+		mockHttpSession.setAttribute(AuthenticateAspect.AUTH_USER, ownerAuth);
+		given(
+			productCreateService.createProduct(any(ProductCreateRequestDto.class), any(AuthUser.class)))
+			.willThrow(new NotFoundException("requested store id does not exist"));
+
+		// when
+		ResultActions resultActions = mockMvc.perform(
 			post("/api/v1/products")
 				.session(mockHttpSession)
 				.content(objectMapper.writeValueAsString(productCreateRequestDto))
@@ -188,15 +331,20 @@ class ProductControllerTest {
 			);
 	}
 
-	@UnitTest
-	@Test
-	@DisplayName("아직 입점 처리 되지 않은 Store에 물품 등록하는 경우 실패")
-	public void createProductWithNotAcceptedStore() throws Exception {
-		// given
-		MockHttpSession mockHttpSession = new MockHttpSession();
-		mockHttpSession.setAttribute(AuthenticateAspect.AUTH_USER, ownerAuth);
-		given(productCreateService.createProduct(any(ProductCreateRequestDto.class), any(AuthUser.class)))
-			.willThrow(new NotFoundException("requested store id does not exist"));
+	private ProductDto makeProductDto(
+		Long productId,
+		String productName,
+		ProductCategory productCategory,
+		Long productPrice
+	) {
+		List<ProductOptionDto> productOptionDtos = new ArrayList<>();
+		ProductDto productDto = ProductDto.builder()
+			.productId(productId)
+			.productName(productName)
+			.productCategory(productCategory)
+			.productPrice(productPrice)
+			.productOptions(productOptionDtos)
+			.build();
 
 		// when
 		ResultActions resultActions = mockMvc.perform(
