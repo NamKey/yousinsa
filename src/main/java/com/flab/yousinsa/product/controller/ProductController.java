@@ -36,7 +36,7 @@ public class ProductController {
 		Assert.notNull(productCreateRequestDto, "productCreateRequestDto must not be null");
 
 		Long createdProductId = productCreateService.createProduct(productCreateRequestDto, user);
-		String createdResourceUri = "api/v1/products" + createdProductId;
+		String createdResourceUri = "/api/v1/products/" + createdProductId;
 
 		return ResponseEntity.created(URI.create(createdResourceUri)).build();
 	}
