@@ -36,7 +36,7 @@ class StoreServiceImplTest {
 	StoreRepository storeRepository;
 
 	@InjectMocks
-	StoreServiceImpl storeServiceImpl;
+	StoreAssembleServiceImpl storeServiceImpl;
 
 	UserEntity user;
 	Store store;
