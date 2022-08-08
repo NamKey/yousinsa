@@ -34,16 +34,24 @@ CREATE TABLE `stores`
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products`
 (
-    `id`                 bigint PRIMARY KEY AUTO_INCREMENT,
-    `store_id`           bigint,
-    `sub_category_id`    bigint,
-    `category`           ENUM ('TOP', 'OUTER', 'PANTS'),
-    `price`              int,
-    `product_count`      int,
-    `product_size`       varchar(255),
-    `thumbnail_image_id` bigint,
-    `created_at`         timestamp,
-    `updated_at`         timestamp
+    `id`           bigint PRIMARY KEY AUTO_INCREMENT,
+    `store_id`     bigint,
+    `category`     ENUM ('TOP', 'OUTER', 'PANTS'),
+    `product_name` varchar(255),
+    `price`        int,
+    `created_at`   timestamp,
+    `updated_at`   timestamp
+);
+
+DROP TABLE IF EXISTS `product_options`;
+CREATE TABLE `product_options`
+(
+    `id`           bigint PRIMARY KEY AUTO_INCREMENT,
+    `product_id`   bigint,
+    `price_count`  int,
+    `product_size` varchar(255),
+    `created_at`   timestamp,
+    `updated_at`   timestamp
 );
 
 DROP TABLE IF EXISTS `orders`;
@@ -95,12 +103,8 @@ ALTER TABLE `products`
     ADD FOREIGN KEY (`store_id`) REFERENCES `stores` (`id`)
         ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `products`
-    ADD FOREIGN KEY (`sub_category_id`) REFERENCES `sub_categories` (`id`)
-        ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `products`
-    ADD FOREIGN KEY (`thumbnail_image_id`) REFERENCES `product_detail_images` (`id`)
+ALTER TABLE `product_options`
+    ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
         ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `orders`
