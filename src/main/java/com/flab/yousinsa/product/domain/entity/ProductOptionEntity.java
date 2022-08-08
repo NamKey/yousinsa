@@ -37,8 +37,4 @@ public class ProductOptionEntity {
 
 	@NotBlank
 	private String productSize;
-
-	public void sell(int purchaseAmount) {
-		productCount -= purchaseAmount;
-	}
 }
