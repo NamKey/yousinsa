@@ -67,17 +67,6 @@ CREATE TABLE `order_products`
     `updated_at` timestamp
 );
 
-DROP TABLE IF EXISTS `reviews`;
-CREATE TABLE `reviews`
-(
-    `id`          bigint PRIMARY KEY AUTO_INCREMENT,
-    `product_id`  bigint,
-    `reviewer_id` bigint,
-    `content`     text,
-    `created_at`  timestamp,
-    `updated_at`  timestamp
-);
-
 DROP TABLE IF EXISTS `events`;
 CREATE TABLE `events`
 (
@@ -88,45 +77,6 @@ CREATE TABLE `events`
     `ended_at`      timestamp,
     `created_at`    timestamp,
     `updated_at`    timestamp
-);
-
-DROP TABLE IF EXISTS `favorites`;
-CREATE TABLE `favorites`
-(
-    `id`         bigint PRIMARY KEY AUTO_INCREMENT,
-    `product_id` bigint,
-    `user_id`    bigint,
-    `created_at` timestamp
-);
-
-DROP TABLE IF EXISTS `product_detail_images`;
-CREATE TABLE `product_detail_images`
-(
-    `id`         bigint PRIMARY KEY AUTO_INCREMENT,
-    `product_id` bigint,
-    `imagepath`  varchar(255),
-    `created_at` timestamp,
-    `updated_at` timestamp
-);
-
-DROP TABLE IF EXISTS `sub_categories`;
-CREATE TABLE `sub_categories`
-(
-    `id`            bigint PRIMARY KEY AUTO_INCREMENT,
-    `category_name` varchar(255),
-    `category`      ENUM ('TOP', 'OUTER', 'PANTS'),
-    `created_at`    timestamp,
-    `updated_at`    timestamp
-);
-
-DROP TABLE IF EXISTS `carts`;
-CREATE TABLE `carts`
-(
-    `id`         bigint PRIMARY KEY AUTO_INCREMENT,
-    `user_id`    bigint,
-    `product_id` bigint,
-    `created_at` timestamp,
-    `updated_at` timestamp
 );
 
 DROP TABLE IF EXISTS `event_products`;
@@ -163,30 +113,6 @@ ALTER TABLE `order_products`
 
 ALTER TABLE `order_products`
     ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-        ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `reviews`
-    ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-        ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `reviews`
-    ADD FOREIGN KEY (`reviewer_id`) REFERENCES `users` (`id`)
-        ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `favorites`
-    ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-        ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `favorites`
-    ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-        ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `product_detail_images`
-    ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-        ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `carts`
-    ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
         ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `event_products`
