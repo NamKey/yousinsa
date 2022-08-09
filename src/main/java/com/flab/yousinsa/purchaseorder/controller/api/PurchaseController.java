@@ -2,6 +2,8 @@ package com.flab.yousinsa.purchaseorder.controller.api;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,10 +29,14 @@ public class PurchaseController {
 	@RolePermission(permittedRoles = {UserRole.BUYER})
 	@PostMapping("api/v1/orders")
 	public ResponseEntity<Void> createPurchaseOrder(
-		@RequestBody CreatePurchaseOrderRequestDto createPurchaseOrderRequestDto,
+		@Valid @RequestBody CreatePurchaseOrderRequestDto createPurchaseOrderRequestDto,
 		@SignInUser AuthUser user
 	) {
-		Long createdOrderId = 1L;
+		Long createdOrderId = purchaseOrderService.createPurchaseOrder(
+			createPurchaseOrderRequestDto,
+			user
+		);
+
 		return ResponseEntity.created(URI.create("api/v1/orders/" + createdOrderId)).build();
 	}
 }
