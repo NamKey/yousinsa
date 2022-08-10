@@ -38,6 +38,7 @@ import com.flab.yousinsa.product.domain.entity.ProductEntity;
 import com.flab.yousinsa.product.domain.entity.ProductOptionEntity;
 import com.flab.yousinsa.product.domain.enums.ProductCategory;
 import com.flab.yousinsa.product.service.contract.ProductCreateService;
+import com.flab.yousinsa.product.service.contract.ProductGetService;
 import com.flab.yousinsa.store.domain.Store;
 import com.flab.yousinsa.store.enums.StoreStatus;
 import com.flab.yousinsa.user.controller.aop.AuthenticateAspect;
@@ -53,6 +54,18 @@ import com.flab.yousinsa.user.domain.enums.UserRole;
 @MockBean(JpaMetamodelMappingContext.class)
 class ProductControllerCreateProductTestDoc {
 
+	@Autowired
+	private MockMvc mockMvc;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@MockBean
+	ProductGetService productGetService;
+
+	@MockBean
+	private ProductCreateService productCreateService;
+
 	UserEntity owner;
 	AuthUser ownerAuth;
 	Store store;
@@ -61,12 +74,6 @@ class ProductControllerCreateProductTestDoc {
 	ProductOptionEntity mediumOption;
 	ProductOptionEntity largeOption;
 	ProductCreateRequestDto productCreateRequestDto;
-	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
-	@MockBean
-	private ProductCreateService productCreateService;
 
 	@BeforeEach
 	public void setUp() {

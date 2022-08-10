@@ -23,11 +23,11 @@ import com.flab.yousinsa.user.controller.annotation.SignInUser;
 import com.flab.yousinsa.user.domain.dtos.AuthUser;
 import com.flab.yousinsa.user.domain.enums.UserRole;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 public class ProductController {
 
