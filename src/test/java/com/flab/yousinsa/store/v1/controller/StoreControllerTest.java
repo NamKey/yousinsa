@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flab.yousinsa.annotation.UnitTest;
 import com.flab.yousinsa.store.v1.dtos.StoreDto;
 import com.flab.yousinsa.store.v1.service.StoreService;
 import com.flab.yousinsa.user.controller.aop.AuthenticateAspect;
@@ -62,6 +63,7 @@ class StoreControllerTest {
 		session.clearAttributes();
 	}
 
+	@UnitTest
 	@Test
 	@DisplayName("입점 신청")
 	public void createStore() throws Exception {
@@ -86,7 +88,7 @@ class StoreControllerTest {
 			.andExpect(status().isCreated())
 			.andExpect(header().exists(HttpHeaders.LOCATION))
 			.andDo(
-				document("create-store",
+				document("store-create",
 					getDocumentRequest(),
 					getDocumentResponse(),
 					requestFields(

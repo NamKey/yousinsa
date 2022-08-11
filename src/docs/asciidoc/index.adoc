@@ -116,4 +116,4 @@ operation::product-create[snippets='curl-request,http-request,http-response,requ
 
 === Create Store
 
-operation::create-store[snippets='curl-request,http-request,http-response,request-body,request-fields,response-headers']
+operation::store-create[snippets='curl-request,http-request,http-response,request-body,request-fields,response-headers']
