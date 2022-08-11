@@ -8,5 +8,5 @@ import com.flab.yousinsa.product.domain.entity.ProductEntity;
 import com.flab.yousinsa.product.domain.enums.ProductCategory;
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
-	Page<ProductEntity> findAllByProductCategory(ProductCategory productCategory, Pageable pageable);
+	Page<ProductEntity> findAllByCategory(ProductCategory category, Pageable pageable);
 }

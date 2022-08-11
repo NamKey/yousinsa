@@ -86,7 +86,7 @@ class ProductGetServiceImplTest {
 		// given
 		Pageable pageable = PageRequest.of(5, 5);
 
-		given(productRepository.findAllByProductCategory(any(ProductCategory.class), any(Pageable.class))).willReturn(
+		given(productRepository.findAllByCategory(any(ProductCategory.class), any(Pageable.class))).willReturn(
 			Page.empty());
 
 		// when
@@ -96,7 +96,7 @@ class ProductGetServiceImplTest {
 		assertThat(productsByCategory.getContent().size()).isEqualTo(0L);
 		assertThat(productsByCategory.getTotalPages()).isEqualTo(1);
 
-		then(productRepository).should().findAllByProductCategory(eq(ProductCategory.TOP), refEq(pageable));
+		then(productRepository).should().findAllByCategory(eq(ProductCategory.TOP), refEq(pageable));
 	}
 
 	@UnitTest
@@ -110,7 +110,7 @@ class ProductGetServiceImplTest {
 		products.add(productTopPinkShirts);
 		PageImpl<ProductEntity> productEntityPage = new PageImpl<>(products);
 
-		given(productRepository.findAllByProductCategory(any(ProductCategory.class), any(Pageable.class)))
+		given(productRepository.findAllByCategory(any(ProductCategory.class), any(Pageable.class)))
 			.willReturn(productEntityPage);
 		given(productDtoConverter.convertProductEntityToProductDto(productTopBlueShirts))
 			.willReturn(productTopBlueShirtsDto);
@@ -128,7 +128,7 @@ class ProductGetServiceImplTest {
 		assertThat(productsByCategory.getContent().size()).isEqualTo(3L);
 		assertThat(productsByCategory.getTotalPages()).isEqualTo(1);
 
-		then(productRepository).should().findAllByProductCategory(eq(ProductCategory.TOP), refEq(pageable));
+		then(productRepository).should().findAllByCategory(eq(ProductCategory.TOP), refEq(pageable));
 	}
 
 	private ProductDto makeProductDto(

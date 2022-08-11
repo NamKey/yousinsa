@@ -25,7 +25,7 @@ public class ProductGetServiceImpl implements ProductGetService {
 	@Transactional(readOnly = true)
 	@Override
 	public Page<ProductDto> getProductsByCategory(ProductCategory productCategory, Pageable pageable) {
-		return productRepository.findAllByProductCategory(productCategory, pageable)
+		return productRepository.findAllByCategory(productCategory, pageable)
 			.map(productDtoConverter::convertProductEntityToProductDto);
 	}
 }
