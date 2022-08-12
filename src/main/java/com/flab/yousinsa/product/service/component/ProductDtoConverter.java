@@ -15,6 +15,8 @@ public class ProductDtoConverter {
 		return ProductDto.builder()
 			.productId(productEntity.getId())
 			.productName(productEntity.getProductName())
+			.productCategory(productEntity.getCategory())
+			.productPrice(productEntity.getProductPrice())
 			.productOptions(
 				productEntity.getOptions().stream()
 					.map(this::convertProductOptionEntityToProductOptionDto)
