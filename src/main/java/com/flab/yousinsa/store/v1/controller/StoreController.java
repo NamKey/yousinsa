@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.flab.yousinsa.store.v1.dtos.StoreDto;
 import com.flab.yousinsa.store.v1.service.StoreService;
 import com.flab.yousinsa.user.controller.annotation.AuthSession;
+import com.flab.yousinsa.user.controller.annotation.RolePermission;
 import com.flab.yousinsa.user.controller.annotation.SignInUser;
 import com.flab.yousinsa.user.domain.dtos.AuthUser;
+import com.flab.yousinsa.user.domain.enums.UserRole;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,23 +23,16 @@ import lombok.RequiredArgsConstructor;
 @RestController
 public class StoreController {
 
-	private final StoreService ownerService;
+	private final StoreService storeCreateService;
 
-	/**
-	 * 입점 신청
-	 * [POST] /stores
-	 *
-	 * @param request 입점 신청시 필요한 데이터
-	 * @param user 세션에 담긴 user 데이터
-	 * @return 입점 신청 결과
-	 */
 	@AuthSession
+	@RolePermission(permittedRoles = UserRole.STORE_OWNER)
 	@PostMapping("/stores")
 	public ResponseEntity<?> createStore(
 		@RequestBody StoreDto.Post request,
 		@SignInUser AuthUser user
 	) {
-		Long id = ownerService.createStore(request, user);
+		Long id = storeCreateService.createStore(request, user);
 		return ResponseEntity.created(URI.create("/api/v1/stores/" + id)).build();
 	}
 }
