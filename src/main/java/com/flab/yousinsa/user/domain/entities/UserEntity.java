@@ -1,8 +1,6 @@
 package com.flab.yousinsa.user.domain.entities;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -12,8 +10,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.flab.yousinsa.global.common.BaseTimeEntity;
 import com.flab.yousinsa.store.domain.Store;
@@ -31,7 +27,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "users")
 public class UserEntity extends BaseTimeEntity {
 
@@ -48,7 +43,6 @@ public class UserEntity extends BaseTimeEntity {
 	private String userEmail;
 
 	@NotNull
-	@Column(name = "user_password")
 	private String userPassword;
 
 	@Setter
