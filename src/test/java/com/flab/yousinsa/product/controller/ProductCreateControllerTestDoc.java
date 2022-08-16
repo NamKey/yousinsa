@@ -38,6 +38,7 @@ import com.flab.yousinsa.product.domain.entity.ProductEntity;
 import com.flab.yousinsa.product.domain.entity.ProductOptionEntity;
 import com.flab.yousinsa.product.domain.enums.ProductCategory;
 import com.flab.yousinsa.product.service.contract.ProductCreateService;
+import com.flab.yousinsa.product.service.contract.ProductGetService;
 import com.flab.yousinsa.store.domain.Store;
 import com.flab.yousinsa.store.enums.StoreStatus;
 import com.flab.yousinsa.user.controller.aop.AuthenticateAspect;
@@ -51,7 +52,7 @@ import com.flab.yousinsa.user.domain.enums.UserRole;
 @ContextConfiguration(classes = SpringTestAopConfig.class)
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
-class ProductControllerTestDoc {
+class ProductCreateControllerTestDoc {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -61,6 +62,9 @@ class ProductControllerTestDoc {
 
 	@MockBean
 	private ProductCreateService productCreateService;
+
+	@MockBean
+	private ProductGetService productGetService;
 
 	UserEntity owner;
 	AuthUser ownerAuth;

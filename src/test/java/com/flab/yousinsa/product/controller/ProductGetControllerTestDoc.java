@@ -46,7 +46,7 @@ import com.flab.yousinsa.product.service.contract.ProductGetService;
 @WebMvcTest(ProductController.class)
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
-class ProductControllerDocTest {
+class ProductGetControllerTestDoc {
 
 	@Autowired
 	MockMvc mockMvc;
