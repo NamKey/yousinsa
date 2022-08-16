@@ -3,6 +3,7 @@ package com.flab.yousinsa.user.domain.entities;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -49,6 +50,6 @@ public class UserEntity extends BaseTimeEntity {
 	@Enumerated(value = EnumType.STRING)
 	private UserRole userRole;
 
-	@OneToOne(mappedBy = "storeOwner")
+	@OneToOne(mappedBy = "storeOwner", fetch = FetchType.LAZY)
 	private Store store;
 }
