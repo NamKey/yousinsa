@@ -115,7 +115,7 @@ class ProductCreateServiceImplTest {
 			.isInstanceOf(IllegalStoreAccessException.class)
 			.hasMessageContaining("this store feature only for owner");
 
-		then(storeReadService).should().getStoreByOwner(eq(store.getId()), eq(notOwnerOfStore));
+		then(storeReadService).should().getStoreByOwner(store.getId(), notOwnerOfStore);
 	}
 
 	@UnitTest
@@ -131,7 +131,7 @@ class ProductCreateServiceImplTest {
 			.isInstanceOf(NotFoundException.class)
 			.hasMessageContaining("requested store id does not exist");
 
-		then(storeReadService).should().getStoreByOwner(eq(store.getId()), eq(ownerOfStore));
+		then(storeReadService).should().getStoreByOwner(store.getId(), ownerOfStore);
 	}
 
 	@UnitTest
