@@ -8,7 +8,8 @@ spring:
     url: ${SPRING_DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
-
+    hikari:
+      maximum-pool-size: 4
   sql:
     init:
       mode: never
