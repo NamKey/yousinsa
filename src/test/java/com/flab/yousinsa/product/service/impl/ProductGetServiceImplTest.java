@@ -67,8 +67,8 @@ class ProductGetServiceImplTest {
 		store = Store.builder()
 			.storeStatus(StoreStatus.ACCEPTED)
 			.storeName("yousinsaStore")
-			.storeOwner(owner)
 			.build();
+		store.addStoreOwner(owner);
 
 		productTopBlueShirts = makeProductEntity(1L, "productTopBlueShirts", ProductCategory.TOP, 1000L);
 		productTopShirts = makeProductEntity(2L, "productTopShirts", ProductCategory.TOP, 1500L);

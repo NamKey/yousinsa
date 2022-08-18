@@ -90,8 +90,10 @@ class ProductCreateServiceImplTest {
 			.build();
 
 		owner = new UserEntity(1L, "ownerOfStore", "ownerOfStore@yousinsa.com", "password", UserRole.STORE_OWNER, null);
-		store = new Store(1L, "newStore", owner, StoreStatus.ACCEPTED);
-		notAcceptedStore = new Store(2L, "notAcceptedStore", owner, StoreStatus.REQUESTED);
+		store = new Store(1L, "newStore", StoreStatus.ACCEPTED);
+		store.addStoreOwner(owner);
+		notAcceptedStore = new Store(2L, "notAcceptedStore", StoreStatus.REQUESTED);
+		notAcceptedStore.addStoreOwner(owner);
 
 		productCreateRequestDto = new ProductCreateRequestDto(
 			store.getId(),

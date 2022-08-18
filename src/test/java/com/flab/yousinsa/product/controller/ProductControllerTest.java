@@ -157,9 +157,9 @@ class ProductControllerTest {
 		store = Store.builder()
 			.id(1L)
 			.storeName("yousinsaStore")
-			.storeOwner(owner)
 			.storeStatus(StoreStatus.ACCEPTED)
 			.build();
+		store.addStoreOwner(owner);
 
 		ProductCreateOptionDto smallOptionDto = new ProductCreateOptionDto(5, "small");
 		ProductCreateOptionDto mediumOptionDto = new ProductCreateOptionDto(10, "medium");

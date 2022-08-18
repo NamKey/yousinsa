@@ -44,16 +44,15 @@ class StoreRepositoryTest {
 		// given
 		Store createStore = Store.builder()
 			.storeName("store")
-			.storeOwner(user)
 			.storeStatus(StoreStatus.REQUESTED)
 			.build();
-
+		createStore.addStoreOwner(user);
 		// when
 		Store store = storeRepository.save(createStore);
 
 		// then
-		Assertions.assertEquals(createStore.getStoreName(), store.getStoreName());
-		Assertions.assertEquals(createStore.getStoreOwner().getUserName(), store.getStoreOwner().getUserName());
+		Assertions.assertThat(createStore.getStoreName()).isEqualTo(store.getStoreName());
+		Assertions.assertThat(createStore.getStoreOwners().stream().findFirst()).hasValue(user);
 	}
 
 	@Test
@@ -63,9 +62,9 @@ class StoreRepositoryTest {
 		userRepository.save(user);
 		Store createStore = Store.builder()
 			.storeName("store")
-			.storeOwner(user)
 			.storeStatus(StoreStatus.REQUESTED)
 			.build();
+		createStore.addStoreOwner(user);
 		Store savedStore = storeRepository.save(createStore);
 
 		// when

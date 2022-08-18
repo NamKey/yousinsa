@@ -64,7 +64,8 @@ class AdminStoreRequestServiceImplTest {
 			.userRole(UserRole.STORE_OWNER)
 			.build();
 
-		Store store = new Store(1L, "rejectedShop", user, StoreStatus.REJECTED);
+		Store store = new Store(1L, "rejectedShop", StoreStatus.REJECTED);
+		store.addStoreOwner(user);
 
 		given(storeRepository.findById(anyLong())).willReturn(Optional.of(store));
 
@@ -90,7 +91,8 @@ class AdminStoreRequestServiceImplTest {
 			.userRole(UserRole.STORE_OWNER)
 			.build();
 
-		Store store = new Store(1L, "requestedShop", user, StoreStatus.REQUESTED);
+		Store store = new Store(1L, "requestedShop", StoreStatus.REQUESTED);
+		store.addStoreOwner(user);
 
 		given(storeRepository.findById(anyLong())).willReturn(Optional.of(store));
 

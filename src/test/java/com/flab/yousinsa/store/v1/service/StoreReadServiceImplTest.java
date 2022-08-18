@@ -50,10 +50,11 @@ class StoreReadServiceImplTest {
 
 		store = Store.builder()
 			.id(1L)
-			.storeOwner(owner)
 			.storeName("testStore")
 			.storeStatus(StoreStatus.ACCEPTED)
 			.build();
+
+		store.addStoreOwner(owner);
 	}
 
 	@UnitTest

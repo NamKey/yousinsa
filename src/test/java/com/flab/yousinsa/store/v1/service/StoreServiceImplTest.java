@@ -49,7 +49,8 @@ class StoreServiceImplTest {
 			.userPassword("test")
 			.userRole(UserRole.BUYER)
 			.build();
-		store = Store.builder().id(1L).storeName("store").storeOwner(user).storeStatus(StoreStatus.REQUESTED).build();
+		store = Store.builder().id(1L).storeName("store").storeStatus(StoreStatus.REQUESTED).build();
+		store.addStoreOwner(user);
 	}
 
 	@Test
