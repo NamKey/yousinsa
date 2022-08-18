@@ -11,10 +11,12 @@ import com.flab.yousinsa.user.domain.entities.UserEntity;
 public class StoreDtoConverter {
 
 	public Store convertOwnerRequestToEntity(StoreDto.Post request, UserEntity user) {
-		return Store.builder()
+		Store newStore = Store.builder()
 			.storeName(request.getStoreName())
-			.storeOwner(user)
 			.storeStatus(StoreStatus.REQUESTED)
 			.build();
+
+		newStore.addStoreOwner(user);
+		return newStore;
 	}
 }

@@ -23,7 +23,7 @@ public class StoreReadServiceImpl implements StoreReadService {
 		Store foundStore = storeRepository.findByIdWithOwner(storeId)
 			.orElseThrow(() -> new NotFoundException("requested store id does not exist"));
 
-		if (!foundStore.getStoreOwner().getId().equals(user.getId())) {
+		if (foundStore.getStoreOwners().stream().noneMatch(owner -> owner.getId().equals(user.getId()))) {
 			throw new IllegalStoreAccessException("this store feature only for owner");
 		}
 
