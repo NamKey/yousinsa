@@ -1,5 +1,9 @@
 package com.flab.yousinsa.store.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,8 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -40,12 +43,16 @@ public class Store extends BaseTimeEntity {
 	@Column(name = "store_name")
 	private String storeName;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "store_owner")
-	private UserEntity storeOwner;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private final List<UserEntity> storeOwners = new ArrayList<>();
 
 	@Setter
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "store_status")
 	private StoreStatus storeStatus;
+
+	public void addStoreOwner(UserEntity owner) {
+		owner.setStore(this);
+		storeOwners.add(owner);
+	}
 }
