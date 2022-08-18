@@ -11,8 +11,8 @@ import com.flab.yousinsa.user.domain.entities.UserEntity;
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
-	boolean existsByStoreOwner(UserEntity user);
-
-	@Query(value = "SELECT s FROM Store s JOIN FETCH s.storeOwner")
+	boolean existsByStoreOwners(UserEntity user);
+	
+	@Query(value = "SELECT DISTINCT s FROM Store s JOIN FETCH s.storeOwners")
 	Optional<Store> findByIdWithOwner(Long storeId);
 }

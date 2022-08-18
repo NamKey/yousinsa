@@ -1,9 +1,5 @@
 package com.flab.yousinsa.store.v1.service;
 
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.flab.yousinsa.store.domain.Store;
 import com.flab.yousinsa.store.domain.StoreRepository;
 import com.flab.yousinsa.store.exceptions.NotValidStoreException;
@@ -14,6 +10,10 @@ import com.flab.yousinsa.user.domain.entities.UserEntity;
 import com.flab.yousinsa.user.service.contract.UserReadService;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Primary
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class StoreAssembleServiceImpl implements StoreService {
 	}
 
 	private void validateStoreOwnerByUserId(UserEntity user) {
-		boolean isPresent = storeRepository.existsByStoreOwner(user);
+		boolean isPresent = storeRepository.existsByStoreOwners(user);
 		if (isPresent) {
 			throw new NotValidStoreException("Already exists.");
 		}
