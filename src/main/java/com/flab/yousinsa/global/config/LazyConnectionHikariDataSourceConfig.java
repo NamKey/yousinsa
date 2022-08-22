@@ -12,6 +12,9 @@ import org.springframework.util.StringUtils;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+/**
+ * https://github.com/spring-projects/spring-boot/issues/15480
+ */
 @Configuration
 public class LazyConnectionHikariDataSourceConfig {
 	@Bean
