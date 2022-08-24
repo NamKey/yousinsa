@@ -52,7 +52,7 @@ public class UserEntity extends BaseTimeEntity {
 	private UserRole userRole;
 
 	@Setter
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "store_id")
 	private Store store;
 }
