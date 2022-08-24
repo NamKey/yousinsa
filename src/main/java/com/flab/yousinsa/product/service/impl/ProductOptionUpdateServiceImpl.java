@@ -25,10 +25,8 @@ public class ProductOptionUpdateServiceImpl implements ProductOptionUpdateServic
 		Assert.notNull(productOptionId, "product option id must be not null");
 		validatePurchaseRequest(purchaseAmount);
 
-		ProductOptionEntity requestedProductOption = productOptionRepository.findById(productOptionId)
-			.orElseThrow(() -> {
-				throw new NotFoundException("requested product option id does not exist");
-			});
+		ProductOptionEntity requestedProductOption = productOptionRepository.findByIdWithLock(productOptionId)
+			.orElseThrow(() -> new NotFoundException("requested product option id does not exist"));
 
 		validateProductStock(requestedProductOption.getProductCount(), purchaseAmount);
 
