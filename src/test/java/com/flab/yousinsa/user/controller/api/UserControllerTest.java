@@ -191,8 +191,8 @@ class UserControllerTest {
 					getDocumentResponse())
 			);
 
-		assertThatThrownBy(() -> mockHttpSession.getAttribute(AuthenticateAspect.AUTH_USER))
-			.isInstanceOf(IllegalStateException.class);
+		Object attribute = mockHttpSession.getAttribute(AuthenticateAspect.AUTH_USER);
+		assertThat(attribute).isNull();
 	}
 
 	@UnitTest

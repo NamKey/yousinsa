@@ -23,7 +23,6 @@ import com.flab.yousinsa.user.domain.dtos.response.SignInResponseDto;
 import com.flab.yousinsa.user.domain.dtos.response.SignUpResponseDto;
 import com.flab.yousinsa.user.service.contract.UserSignInService;
 import com.flab.yousinsa.user.service.contract.UserSignUpService;
-import com.flab.yousinsa.user.service.exception.SignOutFailException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,15 +62,7 @@ public class UserController {
 	@AuthSession
 	@DeleteMapping("api/v1/users/sign-out")
 	public ResponseEntity<Void> signOutUser(HttpSession httpSession) {
-		try {
-			httpSession.invalidate();
-		} catch (IllegalStateException e) {
-			if (log.isErrorEnabled()) {
-				log.error("User already signed out", e);
-			}
-
-			throw new SignOutFailException("User already signed out", e);
-		}
+		httpSession.removeAttribute(AUTH_USER);
 
 		return ResponseEntity.status(HttpStatus.RESET_CONTENT).build();
 	}
