@@ -9,4 +9,10 @@ COPY ${JAR_FILE} app.jar
 RUN mkdir -p /pinpoint-agent
 COPY pinpoint-agent-2.4.1 /pinpoint-agent
 
-ENTRYPOINT ["java","-jar $JAVA_OPTS","app.jar","2>&1","&"]
+ENTRYPOINT ["java","-jar",\
+"-javaagent:pinpoint-agent/pinpoint-bootstrap-2.4.1.jar",\
+"-Dpinpoint.applicationName=yousinsa",\
+"-Dpintpoint.agentId=$AGENT_ID",\
+"-Dpinpoint.config=pinpoint-agent/pinpoint-root.config",\
+"-Dspring.profiles.active=prod",\
+"app.jar","2>&1","&"]
