@@ -11,6 +11,6 @@ COPY pinpoint-agent-2.4.1 /pinpoint-agent
 
 ENTRYPOINT ["java","-jar",\
 "-javaagent:pinpoint-agent/pinpoint-bootstrap-2.4.1.jar",\
-"-Dpinpoint.agentId=ysa01","-Dpinpoint.applicationName=yousinsa",\
+"-Dpinpoint.applicationName=yousinsa",\
 "-Dpinpoint.config=pinpoint-agent/pinpoint-root.config"\
 ,"-Dspring.profiles.active=prod","app.jar","2>&1","&"]
