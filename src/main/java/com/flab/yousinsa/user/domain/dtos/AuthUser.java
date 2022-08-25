@@ -1,8 +1,10 @@
 package com.flab.yousinsa.user.domain.dtos;
 
+import java.io.Serializable;
+
 import com.flab.yousinsa.user.domain.enums.UserRole;
 
-public class AuthUser {
+public class AuthUser implements Serializable {
 	private Long id;
 	private String userName;
 	private String userEmail;
