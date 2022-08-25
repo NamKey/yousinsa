@@ -9,4 +9,4 @@ COPY ${JAR_FILE} app.jar
 RUN mkdir -p /pinpoint-agent
 COPY pinpoint-agent-2.4.1 /pinpoint-agent
 
-ENTRYPOINT exec java ${JAVA_OPTS} -jar app.jar
+ENTRYPOINT ["java","-jar $JAVA_OPTS","app.jar","2>&1","&"]
