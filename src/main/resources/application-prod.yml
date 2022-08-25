@@ -10,6 +10,15 @@ spring:
     password: ${DATASOURCE_PASSWORD}
     hikari:
       auto-commit: false
+  session:
+    redis:
+      flush-mode: on_save
+    store-type: redis
+    timeout: 30m
+
+  redis:
+    host: ${REDIS_HOST}
+
   sql:
     init:
       mode: never
@@ -21,8 +30,9 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        default_batch_fetch_size: 100
         connection:
           provider_disables_autocommit: true
 
@@ -33,10 +43,3 @@ spring:
     always-use-message-format: true
     use-code-as-default-message: true
     fallback-to-system-locale: true
-
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: debug
-        type: trace
