@@ -7,12 +7,16 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 ## Design
 
-### Table
+### Database
 [Table 설계에 대한 Issue](https://github.com/f-lab-edu/yousinsa/issues/5)
 
 [Table Diagram](https://dbdiagram.io/d/626c11c695e7f23c619ca37d)
 
 <img src="https://user-images.githubusercontent.com/25685282/166242241-7685315d-fc17-4bc4-abce-a65d3a71c318.png" alt="">
+
+### Infra
+
+![yousinsa-network-infra_ver3](https://user-images.githubusercontent.com/25685282/186876345-929cb9c4-dc0d-4ce2-b730-752ab8927324.png)
 
 ---
 ## 👕 프로젝트 중점사항
