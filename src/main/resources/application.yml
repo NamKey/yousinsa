@@ -7,6 +7,17 @@ spring:
     url: ${SPRING_DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
+    hikari:
+      auto-commit: false
+  session:
+    redis:
+      flush-mode: on_save
+    store-type: redis
+    timeout: 10s
+
+  redis:
+    host: ${REDIS_HOST}
+    port: 6379
 
   sql:
     init:
@@ -19,9 +30,11 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         default_batch_fetch_size: 100
+        connection:
+          provider_disables_autocommit: true
 
   messages:
     basename: i18n/messages/message, i18n/exceptions/exception
