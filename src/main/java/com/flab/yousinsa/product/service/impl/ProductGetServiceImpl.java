@@ -1,5 +1,6 @@
 package com.flab.yousinsa.product.service.impl;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class ProductGetServiceImpl implements ProductGetService {
 	private final ProductRepository productRepository;
 	private final ProductDtoConverter productDtoConverter;
 
+	@Cacheable(cacheNames = "products", key = "#productCategory.name() + #pageable.pageNumber + #pageable.pageSize + #pageable.sort")
 	@Transactional(readOnly = true)
 	@Override
 	public Page<ProductDto> getProductsByCategory(ProductCategory productCategory, Pageable pageable) {
