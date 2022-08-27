@@ -1,5 +1,6 @@
 package com.flab.yousinsa.product.domain.dtos;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.flab.yousinsa.product.domain.enums.ProductCategory;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductDto {
+public class ProductDto implements Serializable {
 	private Long productId;
 
 	private String productName;
