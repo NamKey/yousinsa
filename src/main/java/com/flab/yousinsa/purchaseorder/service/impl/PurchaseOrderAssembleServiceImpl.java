@@ -33,6 +33,11 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 	public Long createPurchaseOrder(CreatePurchaseOrderRequestDto createPurchaseOrderRequestDto, AuthUser user) {
 		Assert.notNull(createPurchaseOrderRequestDto, "purchaseOrder request must not be null");
 
+		productOptionUpdateService.sellProduct(
+			createPurchaseOrderRequestDto.getProductOptionId(),
+			createPurchaseOrderRequestDto.getPurchaseOrderAmount()
+		);
+
 		UserEntity buyer = userReadService.getUser(user.getId());
 
 		PurchaseOrderEntity purchaseOrder = PurchaseOrderEntity.builder()
@@ -47,10 +52,6 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 				productOptionReadService.getProductOption(createPurchaseOrderRequestDto.getProductOptionId()))
 			.build();
 
-		productOptionUpdateService.sellProduct(
-			purchaseOrderItem.getProductOption().getId(),
-			purchaseOrderItem.getPurchaseOrderAmount()
-		);
 		purchaseOrder.addPurchaseOrderItem(purchaseOrderItem);
 
 		PurchaseOrderEntity acceptedPurchaseOrder = purchaseOrderRepository.save(purchaseOrder);
