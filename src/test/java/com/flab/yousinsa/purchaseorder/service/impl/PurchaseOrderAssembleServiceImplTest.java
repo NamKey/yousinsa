@@ -42,6 +42,9 @@ class PurchaseOrderAssembleServiceImplTest {
 	ProductOptionUpdateService productOptionUpdateService;
 
 	@Mock
+	PurchaseOrderCreateServiceImpl purchaseOrderCreateService;
+
+	@Mock
 	UserReadService userReadService;
 
 	@Mock
@@ -229,7 +232,11 @@ class PurchaseOrderAssembleServiceImplTest {
 		given(userReadService.getUser(anyLong())).willReturn(buyerEntity);
 		given(productOptionReadService.getProductOption(anyLong())).willReturn(smallOption);
 		given(productOptionUpdateService.sellProduct(anyLong(), anyInt())).willReturn(smallOption.getId());
-		given(purchaseOrderRepository.save(any(PurchaseOrderEntity.class))).willReturn(purchaseOrder);
+		given(purchaseOrderCreateService.createPurchaseOrder(
+			any(UserEntity.class),
+			any(ProductOptionEntity.class),
+			anyInt())
+		).willReturn(1L);
 
 		// when
 		Long purchaseOrderId = purchaseOrderAssembleService.createPurchaseOrder(smallOptionRequestDto, buyer);
@@ -238,12 +245,17 @@ class PurchaseOrderAssembleServiceImplTest {
 		Assertions.assertThat(purchaseOrderId).isEqualTo(purchaseOrder.getId());
 
 		then(userReadService).should().getUser(eq(buyer.getId()));
+		then(purchaseOrderCreateService).should()
+			.createPurchaseOrder(
+				refEq(buyerEntity),
+				refEq(smallOption),
+				eq(5)
+			);
 		then(productOptionUpdateService).should()
 			.sellProduct(
 				eq(smallOptionRequestDto.getProductOptionId()),
 				eq(smallOptionRequestDto.getPurchaseOrderAmount())
 			);
 		then(productOptionReadService).should().getProductOption(eq(smallOption.getId()));
-		then(purchaseOrderRepository).should().save(refEq(purchaseOrder, "purchaseOrderItems", "id"));
 	}
 }
