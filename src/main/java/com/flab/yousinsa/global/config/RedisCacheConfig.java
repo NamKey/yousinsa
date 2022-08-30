@@ -45,7 +45,9 @@ public class RedisCacheConfig {
 	public RedissonClient redissonClient() {
 		Config redisConfig = new Config();
 		redisConfig.useSingleServer()
-			.setAddress("redis://" + REDIS_HOST + ":" + REDIS_PORT);
+			.setAddress("redis://" + REDIS_HOST + ":" + REDIS_PORT)
+			.setConnectionPoolSize(24)
+			.setConnectionMinimumIdleSize(12);
 		return Redisson.create(redisConfig);
 	}
 
