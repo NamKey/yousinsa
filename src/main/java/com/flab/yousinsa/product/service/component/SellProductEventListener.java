@@ -6,7 +6,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.flab.yousinsa.product.domain.events.SellProductEvent;
 import com.flab.yousinsa.product.service.contract.ProductOptionUpdateService;
-import com.flab.yousinsa.purchaseorder.service.contract.PurchaseOrderService;
+import com.flab.yousinsa.purchaseorder.service.contract.PurchaseOrderUpdateService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,20 +17,20 @@ import lombok.extern.slf4j.Slf4j;
 public class SellProductEventListener {
 
 	private final ProductOptionUpdateService productOptionUpdateService;
-	private final PurchaseOrderService purchaseOrderService;
+	private final PurchaseOrderUpdateService purchaseOrderUpdateService;
 
 	@Async
 	@TransactionalEventListener
 	public void handleSellProductEvent(SellProductEvent sellProductEvent) {
-		log.debug(SellProductEventListener.class.getName() + "::" + sellProductEvent + "::" + "event start");
+		log.info(SellProductEventListener.class.getName() + "::" + sellProductEvent + "::" + "event start");
 
 		productOptionUpdateService.deductProductOption(
 			sellProductEvent.getSoldProductOptionId(),
 			sellProductEvent.getPurchaseAmount()
 		);
 
-		purchaseOrderService.acceptPurchaseOrderStatus(sellProductEvent.getPurchaseOrderId());
+		purchaseOrderUpdateService.acceptPurchaseOrderStatus(sellProductEvent.getPurchaseOrderId());
 
-		log.debug(SellProductEventListener.class.getName() + "::" + sellProductEvent + "::" + "event end");
+		log.info(SellProductEventListener.class.getName() + "::" + sellProductEvent + "::" + "event end");
 	}
 }
