@@ -35,6 +35,14 @@ public class ProductOptionUpdateServiceImpl implements ProductOptionUpdateServic
 		return requestedProductOption.getId();
 	}
 
+	@Override
+	public void deductProductOption(Long productOptionId, int purchaseAmount) {
+		Assert.notNull(productOptionId, "product option id must be not null");
+		validatePurchaseRequest(purchaseAmount);
+
+		productOptionRepository.updateProductOptionCount(productOptionId, purchaseAmount);
+	}
+
 	private void validatePurchaseRequest(int purchaseAmount) {
 		if (purchaseAmount < 1) {
 			throw new IllegalPurchaseRequestException("purchase amount can not request under 0");
