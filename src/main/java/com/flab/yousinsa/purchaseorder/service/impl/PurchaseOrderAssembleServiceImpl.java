@@ -1,6 +1,7 @@
 package com.flab.yousinsa.purchaseorder.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.BoundListOperations;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.flab.yousinsa.global.exceptions.NotFoundException;
 import com.flab.yousinsa.product.domain.entity.ProductOptionEntity;
 import com.flab.yousinsa.product.domain.events.SellProductEvent;
 import com.flab.yousinsa.product.service.component.SellProductEventPublisher;
@@ -19,10 +19,7 @@ import com.flab.yousinsa.product.service.contract.ProductOptionReadService;
 import com.flab.yousinsa.product.service.contract.ProductOptionUpdateService;
 import com.flab.yousinsa.product.service.exception.OutOfStockException;
 import com.flab.yousinsa.purchaseorder.domain.dtos.CreatePurchaseOrderRequestDto;
-import com.flab.yousinsa.purchaseorder.domain.entities.PurchaseOrderEntity;
-import com.flab.yousinsa.purchaseorder.domain.entities.PurchaseOrderItemEntity;
-import com.flab.yousinsa.purchaseorder.domain.enums.PurchaseOrderStatus;
-import com.flab.yousinsa.purchaseorder.repository.contract.PurchaseOrderRepository;
+import com.flab.yousinsa.purchaseorder.service.contract.PurchaseOrderCreateService;
 import com.flab.yousinsa.purchaseorder.service.contract.PurchaseOrderService;
 import com.flab.yousinsa.user.domain.dtos.AuthUser;
 import com.flab.yousinsa.user.domain.entities.UserEntity;
@@ -40,7 +37,8 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 	private final ProductOptionReadService productOptionReadService;
 	private final UserReadService userReadService;
 	private final static String PRODUCT_STOCK_NAMESPACE = "product:option:";
-	private final PurchaseOrderRepository purchaseOrderRepository;
+
+	private final PurchaseOrderCreateService purchaseOrderCreateService;
 	private final SellProductEventPublisher sellProductEventPublisher;
 	private final RedisTemplate<String, String> redisTemplate;
 
@@ -49,31 +47,21 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 	public Long createPurchaseOrder(CreatePurchaseOrderRequestDto createPurchaseOrderRequestDto, AuthUser user) {
 		Assert.notNull(createPurchaseOrderRequestDto, "purchaseOrder request must not be null");
 
+		Long productOptionId = createPurchaseOrderRequestDto.getProductOptionId();
+		Integer purchaseOrderAmount = createPurchaseOrderRequestDto.getPurchaseOrderAmount();
 		productOptionUpdateService.sellProduct(
-			createPurchaseOrderRequestDto.getProductOptionId(),
-			createPurchaseOrderRequestDto.getPurchaseOrderAmount()
+			productOptionId,
+			purchaseOrderAmount
 		);
 
 		UserEntity buyer = userReadService.getUser(user.getId());
+		ProductOptionEntity requestProductOption = productOptionReadService.getProductOption(productOptionId);
 
-		PurchaseOrderEntity purchaseOrder = PurchaseOrderEntity.builder()
-			.buyer(buyer)
-			.purchaseOrderStatus(PurchaseOrderStatus.ACCEPTED)
-			.build();
-
-		PurchaseOrderItemEntity purchaseOrderItem = PurchaseOrderItemEntity.builder()
-			.purchaseOrder(purchaseOrder)
-			.purchaseOrderAmount(createPurchaseOrderRequestDto.getPurchaseOrderAmount())
-			.productOption(
-				productOptionReadService.getProductOption(createPurchaseOrderRequestDto.getProductOptionId())
-			)
-			.build();
-
-		purchaseOrder.addPurchaseOrderItem(purchaseOrderItem);
-
-		PurchaseOrderEntity acceptedPurchaseOrder = purchaseOrderRepository.save(purchaseOrder);
-
-		return acceptedPurchaseOrder.getId();
+		return purchaseOrderCreateService.createPurchaseOrder(
+			buyer,
+			requestProductOption,
+			purchaseOrderAmount
+		);
 	}
 
 	/**
@@ -98,7 +86,7 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 	 */
 	@Transactional
 	@Override
-	public Long createPurchaseOrderWithRedis(
+	public Long submitPurchaseOrder(
 		CreatePurchaseOrderRequestDto createPurchaseOrderRequestDto,
 		AuthUser user
 	) {
@@ -109,42 +97,23 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 		Integer remainedStock = tryDeductProductStock(productOptionId, purchaseOrderAmount);
 
 		UserEntity buyer = userReadService.getUser(user.getId());
+		ProductOptionEntity requestProductOption = productOptionReadService.getProductOption(productOptionId);
 
-		PurchaseOrderEntity purchaseOrder = PurchaseOrderEntity.builder()
-			.buyer(buyer)
-			.purchaseOrderStatus(PurchaseOrderStatus.IN_PROGRESS)
-			.build();
-
-		PurchaseOrderItemEntity purchaseOrderItem = PurchaseOrderItemEntity.builder()
-			.purchaseOrder(purchaseOrder)
-			.purchaseOrderAmount(purchaseOrderAmount)
-			.productOption(productOptionReadService.getProductOption(
-				productOptionId
-			))
-			.build();
-
-		purchaseOrder.addPurchaseOrderItem(purchaseOrderItem);
-
-		PurchaseOrderEntity acceptedPurchaseOrder = purchaseOrderRepository.save(purchaseOrder);
+		Long requestedPurchaseOrderId = purchaseOrderCreateService.createPurchaseOrder(
+			buyer,
+			requestProductOption,
+			purchaseOrderAmount
+		);
 
 		sellProductEventPublisher.publishSellProductEvent(new SellProductEvent(
 			productOptionId,
 			purchaseOrderAmount,
-			acceptedPurchaseOrder.getId(),
+			requestedPurchaseOrderId,
 			remainedStock,
 			LocalDateTime.now()
 		));
 
-		return acceptedPurchaseOrder.getId();
-	}
-
-	@Transactional
-	@Override
-	public Long acceptPurchaseOrderStatus(Long purchaseOrderId) {
-		PurchaseOrderEntity foundPurchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
-			.orElseThrow(() -> new NotFoundException("not found purchaseOrder by id"));
-		foundPurchaseOrder.setPurchaseOrderStatus(PurchaseOrderStatus.ACCEPTED);
-		return foundPurchaseOrder.getId();
+		return requestedPurchaseOrderId;
 	}
 
 	private Integer tryDeductProductStock(Long productOptionId, Integer purchaseAmount) {
@@ -165,11 +134,10 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 			listOps.leftPush(Integer.toString(recentRemainedStock - purchaseAmount));
 			remainedStock[0] = recentRemainedStock - purchaseAmount;
 		} else {
-			redisTemplate.execute(new SessionCallback<>() {
-				public Object execute(RedisOperations operations) throws DataAccessException {
+			List<Object> txResult = redisTemplate.execute(new SessionCallback<>() {
+				public List<Object> execute(RedisOperations operations) throws DataAccessException {
 					redisTemplate.multi();
 					BoundListOperations<String, String> txListOps = redisTemplate.boundListOps(key);
-
 					String recentStockStr = txListOps.index(0);
 					Integer recentRemainedStock = Integer.valueOf(recentStockStr != null ? recentStockStr : "0");
 
@@ -181,9 +149,12 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 					txListOps.rightPop();
 
 					remainedStock[0] = recentRemainedStock - purchaseAmount;
-					return redisTemplate.exec();
+					return null; // Synchronize With TransactionManager
 				}
 			});
+
+			assert txResult == null;
+			log.debug("transaction sync with PlatformTransactionManager");
 		}
 
 		return remainedStock[0];
