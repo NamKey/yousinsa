@@ -167,8 +167,8 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 		} else {
 			redisTemplate.execute(new SessionCallback<>() {
 				public Object execute(RedisOperations operations) throws DataAccessException {
-					operations.multi();
-					BoundListOperations<String, String> txListOps = operations.boundListOps(key);
+					redisTemplate.multi();
+					BoundListOperations<String, String> txListOps = redisTemplate.boundListOps(key);
 
 					String recentStockStr = txListOps.index(0);
 					Integer recentRemainedStock = Integer.valueOf(recentStockStr != null ? recentStockStr : "0");
@@ -181,7 +181,7 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 					txListOps.rightPop();
 
 					remainedStock[0] = recentRemainedStock - purchaseAmount;
-					return operations.exec();
+					return redisTemplate.exec();
 				}
 			});
 		}
