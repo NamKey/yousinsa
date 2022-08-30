@@ -39,4 +39,19 @@ public class PurchaseController {
 
 		return ResponseEntity.created(URI.create("api/v1/orders/" + createdOrderId)).build();
 	}
+
+	@AuthSession
+	@RolePermission(permittedRoles = {UserRole.BUYER})
+	@PostMapping("api/v1/orders-redis")
+	public ResponseEntity<Void> createPurchaseOrderWithRedis(
+		@Valid @RequestBody CreatePurchaseOrderRequestDto createPurchaseOrderRequestDto,
+		@SignInUser AuthUser user
+	) {
+		Long createdOrderId = purchaseOrderService.createPurchaseOrderWithRedis(
+			createPurchaseOrderRequestDto,
+			user
+		);
+
+		return ResponseEntity.created(URI.create("api/v1/orders/" + createdOrderId)).build();
+	}
 }
