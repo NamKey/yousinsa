@@ -154,8 +154,6 @@ class PurchaseOrderAssembleServiceImplTest {
 	@DisplayName("재고 수량보다 많은 제품을 주문하는 경우 실패")
 	public void orderRequestProductCountIsOverStockAmount() {
 		// given
-		given(userReadService.getUser(anyLong())).willReturn(buyerEntity);
-		given(productOptionReadService.getProductOption(anyLong())).willReturn(overCountStockOption);
 		given(productOptionUpdateService.sellProduct(anyLong(), anyInt())).willThrow(
 			new OutOfStockException("requested purchase amount is over product stock count"));
 
@@ -167,8 +165,8 @@ class PurchaseOrderAssembleServiceImplTest {
 			.hasMessageContaining("requested purchase amount is over product stock count");
 
 		// then
-		then(userReadService).should().getUser(eq(buyer.getId()));
-		then(productOptionReadService).should().getProductOption(eq(overCountOptionRequestDto.getProductOptionId()));
+		then(userReadService).shouldHaveNoInteractions();
+		then(productOptionReadService).shouldHaveNoInteractions();
 		then(productOptionUpdateService).should().sellProduct(
 			eq(overCountOptionRequestDto.getProductOptionId()),
 			eq(overCountOptionRequestDto.getPurchaseOrderAmount())
@@ -181,8 +179,6 @@ class PurchaseOrderAssembleServiceImplTest {
 	@DisplayName("재고 수량이 없는 제품 옵션을 주문하는 경우 실패")
 	public void orderRequestProductIsOutOfStock() {
 		// given
-		given(userReadService.getUser(anyLong())).willReturn(buyerEntity);
-		given(productOptionReadService.getProductOption(anyLong())).willReturn(outOfStockOption);
 		given(productOptionUpdateService.sellProduct(anyLong(), anyInt())).willThrow(
 			new OutOfStockException("requested product is out of stock"));
 
@@ -194,8 +190,8 @@ class PurchaseOrderAssembleServiceImplTest {
 			.hasMessageContaining("requested product is out of stock");
 
 		// then
-		then(userReadService).should().getUser(eq(buyer.getId()));
-		then(productOptionReadService).should().getProductOption(eq(outOfStockOptionRequestDto.getProductOptionId()));
+		then(userReadService).shouldHaveNoInteractions();
+		then(productOptionReadService).shouldHaveNoInteractions();
 		then(productOptionUpdateService).should().sellProduct(
 			eq(outOfStockOptionRequestDto.getProductOptionId()),
 			eq(outOfStockOptionRequestDto.getPurchaseOrderAmount())
