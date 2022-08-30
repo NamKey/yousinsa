@@ -47,7 +47,7 @@ public class PurchaseController {
 		@Valid @RequestBody CreatePurchaseOrderRequestDto createPurchaseOrderRequestDto,
 		@SignInUser AuthUser user
 	) {
-		Long createdOrderId = purchaseOrderService.createPurchaseOrderWithRedis(
+		Long createdOrderId = purchaseOrderService.submitPurchaseOrder(
 			createPurchaseOrderRequestDto,
 			user
 		);

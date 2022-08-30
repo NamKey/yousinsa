@@ -6,7 +6,5 @@ import com.flab.yousinsa.user.domain.dtos.AuthUser;
 public interface PurchaseOrderService {
 	Long createPurchaseOrder(CreatePurchaseOrderRequestDto createPurchaseOrderRequestDto, AuthUser user);
 
-	Long createPurchaseOrderWithRedis(CreatePurchaseOrderRequestDto createPurchaseOrderRequestDto, AuthUser user);
-
-	Long acceptPurchaseOrderStatus(Long purchaseOrderId);
+	Long submitPurchaseOrder(CreatePurchaseOrderRequestDto createPurchaseOrderRequestDto, AuthUser user);
 }
