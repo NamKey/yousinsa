@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,16 +38,16 @@ public class PurchaseOrderEntity extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "buyer_id")
-	private UserEntity buyer;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseOrder", cascade = CascadeType.ALL)
+	private final List<PurchaseOrderItemEntity> purchaseOrderItems = new ArrayList<>();
 
 	@Setter
 	@Enumerated(value = EnumType.STRING)
 	private PurchaseOrderStatus purchaseOrderStatus;
-
-	@OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL)
-	private final List<PurchaseOrderItemEntity> purchaseOrderItems = new ArrayList<>();
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "buyer_id")
+	private UserEntity buyer;
 
 	public void addPurchaseOrderItem(PurchaseOrderItemEntity purchaseOrderItem) {
 		purchaseOrderItem.setPurchaseOrder(this);
