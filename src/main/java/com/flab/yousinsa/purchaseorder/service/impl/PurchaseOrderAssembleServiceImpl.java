@@ -67,10 +67,6 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 		Integer purchaseOrderAmount = createPurchaseOrderRequestDto.getPurchaseOrderAmount();
 
 		ProductOptionEntity requestProductOption = productOptionReadService.getProductOption(productOptionId);
-		Integer remainedStock = productOptionStockService.tryDeductProductStock(
-			requestProductOption,
-			purchaseOrderAmount
-		);
 
 		UserEntity buyer = userReadService.getUser(user.getId());
 
@@ -78,6 +74,13 @@ public class PurchaseOrderAssembleServiceImpl implements PurchaseOrderService {
 			buyer,
 			requestProductOption,
 			purchaseOrderAmount
+		);
+
+		Long remainedStock = productOptionStockService.tryDeductProductStock(
+			requestProductOption.getId(),
+			requestProductOption.getProductCount(),
+			purchaseOrderAmount,
+			requestedPurchaseOrderId
 		);
 
 		sellProductEventPublisher.publishSellProductEvent(
