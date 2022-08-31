@@ -14,6 +14,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.flab.yousinsa.user.controller.annotation.SignInUser;
 import com.flab.yousinsa.user.domain.dtos.AuthUser;
+import com.flab.yousinsa.user.service.exception.AuthenticationException;
 
 public class AuthUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -25,12 +26,21 @@ public class AuthUserHandlerMethodArgumentResolver implements HandlerMethodArgum
 	}
 
 	@Override
-	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+	public AuthUser resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 
 		HttpServletRequest httpServletRequest = (HttpServletRequest)webRequest.getNativeRequest();
 		HttpSession session = httpServletRequest.getSession(false);
 
-		return session.getAttribute(AUTH_USER);
+		if (session == null) {
+			throw new AuthenticationException("Need to login for using this service");
+		}
+
+		AuthUser authUser = (AuthUser)session.getAttribute(AUTH_USER);
+		if (authUser == null) {
+			throw new AuthenticationException("Valid session does not exists");
+		}
+
+		return authUser;
 	}
 }
