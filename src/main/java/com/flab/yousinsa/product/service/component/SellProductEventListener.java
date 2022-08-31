@@ -24,7 +24,7 @@ public class SellProductEventListener {
 	public void handleSellProductEvent(SellProductEvent sellProductEvent) {
 		log.info(SellProductEventListener.class.getName() + "::" + sellProductEvent + "::" + "event start");
 
-		productOptionUpdateService.deductProductOption(
+		productOptionUpdateService.deductProductOptionCount(
 			sellProductEvent.getSoldProductOptionId(),
 			sellProductEvent.getPurchaseAmount()
 		);

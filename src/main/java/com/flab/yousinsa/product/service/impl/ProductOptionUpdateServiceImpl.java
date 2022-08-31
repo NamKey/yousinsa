@@ -36,7 +36,7 @@ public class ProductOptionUpdateServiceImpl implements ProductOptionUpdateServic
 	}
 
 	@Override
-	public void deductProductOption(Long productOptionId, int purchaseAmount) {
+	public void deductProductOptionCount(Long productOptionId, int purchaseAmount) {
 		Assert.notNull(productOptionId, "product option id must be not null");
 		validatePurchaseRequest(purchaseAmount);
 
