@@ -1,7 +1,6 @@
 package com.flab.yousinsa.product.service.contract;
 
-import com.flab.yousinsa.product.domain.entity.ProductOptionEntity;
-
 public interface ProductOptionStockService {
-	Integer tryDeductProductStock(ProductOptionEntity productOption, Integer purchaseAmount);
+	Long tryDeductProductStock(Long productOptionId, Integer currentStock,
+		Integer purchaseAmount, Long purchaseOrderId);
 }

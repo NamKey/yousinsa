@@ -1,19 +1,8 @@
 package com.flab.yousinsa.product.service.impl;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.BoundListOperations;
-import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.flab.yousinsa.product.domain.entity.ProductOptionEntity;
+import com.flab.yousinsa.product.service.component.ProductStockManageTemplate;
 import com.flab.yousinsa.product.service.contract.ProductOptionStockService;
 import com.flab.yousinsa.product.service.exception.OutOfStockException;
 
@@ -26,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductOptionStockServiceImpl implements ProductOptionStockService {
 
 	private final static String PRODUCT_STOCK_NAMESPACE = "product:option:";
-	private final RedisTemplate<String, String> redisTemplate;
+	private final ProductStockManageTemplate productStockManageTemplate;
 
 	/**
 	 * 1. Redis 확인하여 구매 요청된 ProductOption 갯수와 ProductOption 재고 조회
@@ -47,66 +36,28 @@ public class ProductOptionStockServiceImpl implements ProductOptionStockService 
 	 * - 현재 구매중인 Option ID
 	 * -- Value 정보
 	 * - 현재 재고 정보
+	 * @return 남은 재고 - 해당 재고를 통해 Consistency 평가 용도
 	 */
-	@Transactional
 	@Override
-	public Integer tryDeductProductStock(ProductOptionEntity productOption, Integer purchaseAmount) {
-		String key = PRODUCT_STOCK_NAMESPACE + productOption.getId();
-		BoundListOperations<String, String> listOps = redisTemplate.boundListOps(key);
+	public Long tryDeductProductStock(
+		Long productOptionId, Integer currentStock,
+		Integer purchaseAmount, Long purchaseOrderId
+	) {
+		String key = PRODUCT_STOCK_NAMESPACE + productOptionId;
 
-		Long size = listOps.size();
-		if (size != null && size <= 0) {
-			Integer recentRemainedStock = productOption.getProductCount();
+		Long remainedStock = productStockManageTemplate.manageStockWithCache(
+			key,
+			purchaseOrderId,
+			currentStock,
+			purchaseAmount,
+			1000
+		);
 
-			validateRemainedStock(recentRemainedStock, purchaseAmount);
-
-			int currentRemainedStock = recentRemainedStock - purchaseAmount;
-			listOps.leftPush(Integer.toString(currentRemainedStock));
-
-			return currentRemainedStock;
-		}
-
-		final Deque<Integer> remainedStock = new ArrayDeque<>(1);
-		try {
-			redisTemplate.execute(new SessionCallback<>() {
-				public List<Object> execute(RedisOperations operations) throws DataAccessException {
-					redisTemplate.multi();
-
-					Integer recentRemainedStock = getRemainedStock(listOps, 0);
-
-					validateRemainedStock(recentRemainedStock, purchaseAmount);
-
-					int currentRemainedStock = recentRemainedStock - purchaseAmount;
-
-					listOps.leftPushIfPresent(String.valueOf(currentRemainedStock));
-					remainedStock.addFirst(currentRemainedStock);
-					return new ArrayList<>(); // Synchronize With TransactionManager
-				}
-			});
-		} catch (OutOfStockException ose) {
-			remainedStock.removeFirst();
-			redisTemplate.discard();
-		}
-
-		log.debug("transaction sync with PlatformTransactionManager");
-
-		return remainedStock.getFirst();
-	}
-
-	private Integer getRemainedStock(BoundListOperations<String, String> listOperations, long index) {
-		String recentStockStr = listOperations.index(index);
-		if (recentStockStr == null) {
-			throw new OutOfStockException("Out of stock");
-		}
-
-		return Integer.valueOf(recentStockStr);
-	}
-
-	private void validateRemainedStock(Integer recentRemainedStock, Integer purchaseAmount) {
-		if (recentRemainedStock < purchaseAmount) {
-			log.debug("{} : Redis stock is out of stock :: remainedStock: {} :: purchaseAmount: {}",
-				ProductOptionStockServiceImpl.class.getName(), recentRemainedStock, purchaseAmount);
+		log.info("[OptionId]::{}[PurchaseAmount]::{}[Remained]::{}", productOptionId, purchaseAmount, remainedStock);
+		if (remainedStock == null) {
 			throw new OutOfStockException("out of stock");
 		}
+
+		return remainedStock;
 	}
 }
