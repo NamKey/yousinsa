@@ -3,9 +3,11 @@ package com.flab.yousinsa.product.domain.events;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+@Builder
 @AllArgsConstructor
 @Getter
 @ToString
