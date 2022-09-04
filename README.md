@@ -120,7 +120,9 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 ---
 
-## ⛑ 성능 개선점(블로그 작성중입니다!)
+## ⛑ 성능 개선점
+
+- (블로그 작성중입니다!)
 
 [[#1] Server Infra 구성 문제](https://keydo.tistory.com/, "google link")
 
