@@ -5,6 +5,16 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 [Main - No User (1 of 20)](https://ovenapp.io/project/PGw27rPWTmydr8mpmbRVAZYTZurQXuV6#7YCsA)
 
+## 성능 개선
+
+대용량 트래픽을 처리 하기 위한 성능 개선점들에 따라 변화하는 TPS 변화 그래프입니다.
+
+<div class="tps_graph" align="center">
+    <img width="821" alt="image" src="https://user-images.githubusercontent.com/25685282/188317874-0f94ed55-6a9a-46a1-82c0-86d9f3091807.png">
+</div>
+
+[개선점 리스트](#-성능-개선점)
+
 ## Design
 
 ### Database
@@ -107,6 +117,42 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
     - Monolithic보다 더 유연성 있는 구조와 패턴 적용(Scale-out 고려)
     - MSA와 관련된 Test
     - CQRS
+
+---
+
+## ⛑ 성능 개선점(블로그 작성중입니다!)
+
+[[#1] Server Infra 구성 문제](https://keydo.tistory.com/, "google link")
+
+[[#2] Index 문제](https://keydo.tistory.com/, "google link")
+
+[[#3] N + 1 문제](https://keydo.tistory.com/, "google link")
+
+[[#4] Database PoolSize 최적화](https://keydo.tistory.com/, "google link")
+
+[[#5] Scale-Up 도입](https://keydo.tistory.com/, "google link")
+
+[[#6] getConnection 호출 시점 미루기](https://keydo.tistory.com/, "google link")
+
+[[#8] CannotAquireLockException 발생 문제](https://keydo.tistory.com/, "google link")
+
+[[#9] Session Storage 도입](https://keydo.tistory.com/, "google link")
+
+[[#10] Scale-Out 도입](https://keydo.tistory.com/, "google link")
+
+[[#11] Cache Layer 도입](https://keydo.tistory.com/, "google link")
+
+[[#12] 재고 관리 Inconsistency 문제](https://keydo.tistory.com/, "google link")
+
+[[#13] Database I/O 문제](https://keydo.tistory.com/, "google link")
+
+[[#14] Redis를 활용할 방법 찾기](https://keydo.tistory.com/, "google link")
+
+[[#15] Redis를 사용한 재고관리](https://keydo.tistory.com/, "google link")
+
+[[#16] Redis Connection Pool Size 조정](https://keydo.tistory.com/, "google link")
+
+[[#17] Redis의 Atomic Operation 보장](https://keydo.tistory.com/, "google link")
 
 ---
 
