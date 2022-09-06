@@ -124,6 +124,10 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 - (블로그 작성중입니다!)
 
+- [YOUSINSA Tech Doc Notion](https://www.notion.so/be-the-key/YOUSINSA-Tech-Doc-c78df8d1462a48799b25b84c6d3e1487)
+
+- [YOUSINSA 성능 개선 Notion](https://be-the-key.notion.site/Yousinsa-369eb3085098428780e13ec16508962b)
+
 [[#1] Server Infra 구성 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
 
 [[#2~#3] 쿼리 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
