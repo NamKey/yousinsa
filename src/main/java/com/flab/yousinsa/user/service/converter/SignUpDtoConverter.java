@@ -10,14 +10,12 @@ import com.flab.yousinsa.user.domain.entities.UserEntity;
 public class SignUpDtoConverter {
 
 	public UserEntity convertSignUpRequestToUser(SignUpRequestDto signUpRequest, String hashedPassword) {
-		UserEntity signUpUser = new UserEntity(
-			signUpRequest.getUserName(),
-			signUpRequest.getUserEmail(),
-			hashedPassword,
-			signUpRequest.getUserRole()
-		);
-
-		return signUpUser;
+		return UserEntity.builder()
+			.userName(signUpRequest.getUserName())
+			.userEmail(signUpRequest.getUserEmail())
+			.userPassword(hashedPassword)
+			.userRole(signUpRequest.getUserRole())
+			.build();
 	}
 
 	public SignUpResponseDto convertUserToSignUpResponse(UserEntity user) {

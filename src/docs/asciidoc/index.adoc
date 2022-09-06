@@ -50,6 +50,9 @@ YOUSINSA REST API에서 사용하는 HTTP Method는 REST 방식으로 작성되�
 | `201 Created`
 | 새 리소스를 성공적으로 생성함. 응답의 `Location` 헤더에 해당 리소스의 URI가 담겨있다.
 
+| `202 Accepted`
+| 요청한 리소스의 상태 변화에 대해 수락함
+
 | `204 No Content`
 | 기존 리소스의 제거를 성공적으로 수정함.
 
@@ -62,9 +65,18 @@ YOUSINSA REST API에서 사용하는 HTTP Method는 REST 방식으로 작성되�
 | `401 Unauthorized`
 | 인증이 필요한 리소스
 
+| `403 Forbidden`
+| 요청한 리소스에 대한 권한이 없음.
+
 | `404 Not Found`
 | 요청한 리소스가 없음.
 |===
+
+== ADMIN-API
+
+=== ADMIN Accept Store Request
+
+operation::admin-store-accept[snippets='curl-request,http-request,http-response,request-body,path-parameters,request-fields,response-body,response-fields']
 
 == User-API
 
@@ -84,3 +96,14 @@ operation::user-signin[snippets='curl-request,http-request,http-response,request
 
 operation::user-signout[snippets='curl-request,http-request,http-response']
 
+== Store-API
+
+=== Create Store
+
+operation::create-store[snippets='curl-request,http-request,http-response,request-body,request-fields,response-headers']
+
+== Product-API
+
+=== Create Product
+
+operation::product-create[snippets='curl-request,http-request,http-response,request-body,request-fields,response-headers']

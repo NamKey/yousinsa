@@ -1,5 +1,6 @@
 package com.flab.yousinsa.admin.service.impl;
 
+import static com.flab.yousinsa.store.enums.StoreStatus.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.Optional;
@@ -44,7 +45,8 @@ class AdminStoreRequestServiceImplTest {
 		given(storeRepository.findById(anyLong())).willReturn(Optional.empty());
 
 		// when, given
-		Assertions.assertThatThrownBy(() -> adminStoreRequestService.acceptStoreRequest(wrongStoreId))
+		Assertions.assertThatThrownBy(
+				() -> adminStoreRequestService.acceptStoreRequest(wrongStoreId, StoreStatus.ACCEPTED))
 			.isInstanceOf(NoValidStoreExistException.class)
 			.hasMessageContaining("no valid store not found");
 	}
@@ -55,13 +57,20 @@ class AdminStoreRequestServiceImplTest {
 	public void acceptStoreRequestOnInvalidStoreStats() {
 		// given
 		Long validStoreId = 1L;
-		UserEntity user = new UserEntity("rejectedUser", "owner@yousinsa.com", "password", UserRole.STORE_OWNER);
+		UserEntity user = UserEntity.builder()
+			.userName("rejectedUser")
+			.userEmail("owner@yousinsa.com")
+			.userPassword("password")
+			.userRole(UserRole.STORE_OWNER)
+			.build();
+
 		Store store = new Store(1L, "rejectedShop", user, StoreStatus.REJECTED);
 
 		given(storeRepository.findById(anyLong())).willReturn(Optional.of(store));
 
 		// when, given
-		Assertions.assertThatThrownBy(() -> adminStoreRequestService.acceptStoreRequest(validStoreId))
+		Assertions.assertThatThrownBy(
+				() -> adminStoreRequestService.acceptStoreRequest(validStoreId, StoreStatus.ACCEPTED))
 			.isInstanceOf(InvalidStoreStateException.class)
 			.hasMessageContaining("store status is not valid, only for requested");
 	}
@@ -73,8 +82,14 @@ class AdminStoreRequestServiceImplTest {
 		// given
 		Long validStoreId = 1L;
 
-		RequestStoreDtoResponse validResponse = new RequestStoreDtoResponse(validStoreId, StoreStatus.ACCEPTED);
-		UserEntity user = new UserEntity("requestedUser", "owner@yousinsa.com", "password", UserRole.STORE_OWNER);
+		RequestStoreDtoResponse validResponse = new RequestStoreDtoResponse(validStoreId, ACCEPTED);
+		UserEntity user = UserEntity.builder()
+			.userName("requestedUser")
+			.userEmail("owner@yousinsa.com")
+			.userPassword("password")
+			.userRole(UserRole.STORE_OWNER)
+			.build();
+
 		Store store = new Store(1L, "requestedShop", user, StoreStatus.REQUESTED);
 
 		given(storeRepository.findById(anyLong())).willReturn(Optional.of(store));
@@ -82,7 +97,8 @@ class AdminStoreRequestServiceImplTest {
 		given(storeRequestDtoConverter.convertEntityToResponse(any(Store.class))).willReturn(validResponse);
 
 		// when
-		RequestStoreDtoResponse response = adminStoreRequestService.acceptStoreRequest(validStoreId);
+		RequestStoreDtoResponse response = adminStoreRequestService.acceptStoreRequest(validStoreId,
+			StoreStatus.ACCEPTED);
 
 		// then
 		Assertions.assertThat(response.getStoreId()).isEqualTo(validStoreId);
