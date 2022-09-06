@@ -7,7 +7,7 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 ## 성능 개선
 
-대용량 트래픽을 처리 하기 위한 성능 개선점들에 따라 변화하는 TPS 변화 그래프입니다.
+대용량 트래픽을 처리 하기 위한 성능 개선점들을 반영한 TPS 테스트 그래프입니다.
 
 <div class="tps_graph" align="center">
     <img width="821" alt="image" src="https://user-images.githubusercontent.com/25685282/188317874-0f94ed55-6a9a-46a1-82c0-86d9f3091807.png">
@@ -124,37 +124,35 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 - (블로그 작성중입니다!)
 
-[[#1] Server Infra 구성 문제](https://keydo.tistory.com/, "google link")
+[[#1] Server Infra 구성 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#2] Index 문제](https://keydo.tistory.com/, "google link")
+[[#2~#3] 쿼리 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#3] N + 1 문제](https://keydo.tistory.com/, "google link")
+[[#4] Database PoolSize 최적화](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#4] Database PoolSize 최적화](https://keydo.tistory.com/, "google link")
+[[#5] Scale-Up 도입](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#5] Scale-Up 도입](https://keydo.tistory.com/, "google link")
+[[#6] getConnection 호출 시점 미루기](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#6] getConnection 호출 시점 미루기](https://keydo.tistory.com/, "google link")
+[[#8] CannotAquireLockException 발생 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#8] CannotAquireLockException 발생 문제](https://keydo.tistory.com/, "google link")
+[[#9] Session Storage 도입](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#9] Session Storage 도입](https://keydo.tistory.com/, "google link")
+[[#10] Scale-Out 도입](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#10] Scale-Out 도입](https://keydo.tistory.com/, "google link")
+[[#11] Cache Layer 도입](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#11] Cache Layer 도입](https://keydo.tistory.com/, "google link")
+[[#12] 재고 관리 Inconsistency 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#12] 재고 관리 Inconsistency 문제](https://keydo.tistory.com/, "google link")
+[[#13] Database I/O 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#13] Database I/O 문제](https://keydo.tistory.com/, "google link")
+[[#14] Redis를 활용할 방법 찾기](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#14] Redis를 활용할 방법 찾기](https://keydo.tistory.com/, "google link")
+[[#15] Redis를 사용한 재고관리](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#15] Redis를 사용한 재고관리](https://keydo.tistory.com/, "google link")
+[[#16] Redis Connection Pool Size 조정](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#16] Redis Connection Pool Size 조정](https://keydo.tistory.com/, "google link")
-
-[[#17] Redis의 Atomic Operation 보장](https://keydo.tistory.com/, "google link")
+[[#17] Redis의 Atomic Operation 보장](https://keydo.tistory.com/category/Project/YOUSINSA)
 
 ---
 
