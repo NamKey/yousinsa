@@ -1,4 +1,5 @@
-# YOUSINSA
+# [YOUSINSA](https://keydo.tistory.com/20)
+
 MUSINSA 같은 온라인 편집샵 대용량 서버
 
 ## Mock-Up
@@ -10,7 +11,7 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 대용량 트래픽을 처리 하기 위한 성능 개선점들을 반영한 TPS 테스트 그래프입니다.
 
 <div class="tps_graph" align="center">
-    <img width="821" alt="image" src="https://user-images.githubusercontent.com/25685282/188317874-0f94ed55-6a9a-46a1-82c0-86d9f3091807.png">
+    <img width="821" alt="image" src="https://user-images.githubusercontent.com/25685282/190669560-a25be401-8d5a-451d-b2d5-af41b9a52ee2.png">
 </div>
 
 [개선점 리스트](#-성능-개선점)
@@ -124,7 +125,7 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 - (블로그 작성중입니다!)
 
-[[#1] Server Infra 구성 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#1] Server Infra 구성 문제](https://keydo.tistory.com/21)
 
 [[#2~#3] 쿼리 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
 
