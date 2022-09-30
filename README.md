@@ -127,13 +127,15 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 [[#1] Server Infra 구성 문제](https://keydo.tistory.com/21)
 
-[[#2~#3] 쿼리 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#2~#3] 쿼리 문제](https://keydo.tistory.com/24)
 
-[[#4] Database PoolSize 최적화](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#4] Database PoolSize 최적화](https://keydo.tistory.com/26)
 
-[[#5] Scale-Up 도입](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#5] Scale-Up 도입](https://keydo.tistory.com/27)
 
-[[#6] getConnection 호출 시점 미루기](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#6] getConnection 호출 시점 미루기 - 1](https://keydo.tistory.com/28)
+
+[[#7] getConnection 호출 시점 미루기 - 2](https://keydo.tistory.com/category/Project/YOUSINSA)
 
 [[#8] CannotAquireLockException 발생 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
 
