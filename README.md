@@ -135,7 +135,7 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 [[#6] getConnection 호출 시점 미루기 - 1](https://keydo.tistory.com/28)
 
-[[#7] getConnection 호출 시점 미루기 - 2](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#7] getConnection 호출 시점 미루기 - 2](https://keydo.tistory.com/29)
 
 [[#8] CannotAquireLockException 발생 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
 
