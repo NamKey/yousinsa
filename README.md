@@ -137,7 +137,7 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 [[#7] getConnection 호출 시점 미루기 - LazyConnectionDataSourceProxy](https://keydo.tistory.com/29)
 
-[[#8] CannotAquireLockException 발생 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#8] DeadLock 발생 문제](https://keydo.tistory.com/30)
 
 [[#9] Session Storage 도입](https://keydo.tistory.com/category/Project/YOUSINSA)
 
