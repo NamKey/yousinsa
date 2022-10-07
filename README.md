@@ -139,23 +139,15 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 [[#8] DeadLock 발생 문제](https://keydo.tistory.com/30)
 
-[[#9] Session Storage 도입](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#9] Scale-Out 도입](https://keydo.tistory.com/31)
 
-[[#10] Scale-Out 도입](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#10] Scale-Out 테스트 결과 분석하기](https://keydo.tistory.com/31)
 
-[[#11] Cache Layer 도입](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#11] 재고 관리 Inconsistency 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#12] 재고 관리 Inconsistency 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#12] Redis를 사용한 재고관리 방법 비교하기](https://keydo.tistory.com/category/Project/YOUSINSA)
 
-[[#13] Database I/O 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
-
-[[#14] Redis를 활용할 방법 찾기](https://keydo.tistory.com/category/Project/YOUSINSA)
-
-[[#15] Redis를 사용한 재고관리](https://keydo.tistory.com/category/Project/YOUSINSA)
-
-[[#16] Redis Connection Pool Size 조정](https://keydo.tistory.com/category/Project/YOUSINSA)
-
-[[#17] Redis의 Atomic Operation 보장](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#13] Redis Operation 최적화](https://keydo.tistory.com/category/Project/YOUSINSA)
 
 ---
 
