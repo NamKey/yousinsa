@@ -143,7 +143,7 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 [[#10] Scale-Out 테스트 결과 분석하기](https://keydo.tistory.com/31)
 
-[[#11] 재고 관리 Inconsistency 문제](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#11] 재고 관리 Inconsistency 문제](https://keydo.tistory.com/34)
 
 [[#12] Redis를 사용한 재고관리 방법 비교하기](https://keydo.tistory.com/category/Project/YOUSINSA)
 
