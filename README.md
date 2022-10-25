@@ -2,6 +2,11 @@
 
 MUSINSA 같은 온라인 편집샵 대용량 서버
 
+## Branch 설명
+- master : 배포용 Branch
+- develop : 배포 되기 전 Test Branch
+- staging : 성능 개선 Test Branch
+
 ## Mock-Up
 
 [Main - No User (1 of 20)](https://ovenapp.io/project/PGw27rPWTmydr8mpmbRVAZYTZurQXuV6#7YCsA)
