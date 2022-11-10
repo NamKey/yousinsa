@@ -123,8 +123,6 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 ## ⛑ 성능 개선점
 
-- (블로그 작성중입니다!)
-
 [[#1] Server Infra 구성 문제](https://keydo.tistory.com/21)
 
 [[#2~#3] 쿼리 문제](https://keydo.tistory.com/24)
@@ -147,7 +145,9 @@ MUSINSA 같은 온라인 편집샵 대용량 서버
 
 [[#12] Redis에서 재고 관리(feat.Lua Script)](https://keydo.tistory.com/37)
 
-[[#13] Redis Operation 최적화](https://keydo.tistory.com/category/Project/YOUSINSA)
+[[#13] Redis에서 재고 관리(feat.Eventually Consistency)](https://keydo.tistory.com/38)
+
+[[#14] YOUSINSA, 이대로 괜찮은가?](https://keydo.tistory.com/39)
 
 ---
 
